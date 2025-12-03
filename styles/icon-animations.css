@@ -1,0 +1,25 @@
+.jk-spin {
+  animation: jk-spin 1s linear infinite;
+}
+.jk-pulse {
+  animation: jk-pulse 1s ease-in-out infinite;
+}
+.jk-bounce {
+  animation: jk-bounce 0.8s ease-in-out infinite;
+}
+
+@keyframes jk-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes jk-pulse {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+@keyframes jk-bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}

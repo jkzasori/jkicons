@@ -1,0 +1,25 @@
+# Dependencias
+node_modules/
+
+# Build outputs
+dist/
+dist-icons/
+react/
+
+# Releases
+.releases/
+releases/
+
+# Storybook
+.storybook-static/
+storybook-static/
+
+# VitePress
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+
+# TypeScript
+*.tsbuildinfo
+
+# Archivos temporales
+*.log
