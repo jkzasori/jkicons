@@ -1,11 +1,20 @@
 {
-  "name": "jkicons",
+  "name": "@jkzasori/jkicons",
   "version": "1.0.0",
   "description": "Librería de íconos SVG personalizables creada por José Támara.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "module": "./dist/index.mjs",
-  "files": ["dist"],
+  "files": ["dist", "react", "icons"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./react/*": "./react/*",
+    "./icons/*": "./icons/*"
+  },
   "keywords": [
     "icons",
     "svg",

@@ -1,0 +1,7 @@
+<svg
+   xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <circle cx="10" cy="10" r="9" fill="none" stroke="var(--secondaryColor)" stroke-width="2"/>
+  <g transform="rotate(90 10 10)">
+  <path d="M10 4a6 6 0 0 0-4.24 10.24L10 10V4z" fill="currentColor"/>
+  </g>
+  </svg>

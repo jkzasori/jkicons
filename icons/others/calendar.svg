@@ -1,0 +1,18 @@
+<svg
+   xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+  <g transform="translate(-3 -3)">
+  <rect width="25" height="23.077" rx="4.5" transform="translate(4.5 6.423)" />
+  <circle cx="1.442" cy="1.442" r="1.442" transform="translate(17.962 14.115)" />
+  <circle cx="1.442" cy="1.442" r="1.442" transform="translate(22.769 14.115)" />
+  <circle cx="1.442" cy="1.442" r="1.442" transform="translate(17.962 18.923)" />
+  <circle cx="1.442" cy="1.442" r="1.442" transform="translate(22.769 18.923)" />
+  <circle cx="1.442" cy="1.442" r="1.442" transform="translate(8.346 18.923)" />
+  <circle cx="1.442" cy="1.442" r="1.442" transform="translate(13.154 18.923)" />
+  <circle cx="1.442" cy="1.442" r="1.442" transform="translate(8.346 23.731)" />
+  <circle cx="1.442" cy="1.442" r="1.442" transform="translate(13.154 23.731)" />
+  <circle cx="1.442" cy="1.442" r="1.442" transform="translate(17.962 23.731)" />
+  <path d="M12 4.5v1.923" transform="translate(-2.692)" />
+  <path d="M36 4.5v1.923" transform="translate(-11.308)" />
+  <path d="M29.5 15h-25" transform="translate(0 -3.769)" />
+  </g>
+  </svg>

@@ -21,14 +21,16 @@ function walk(dir, arr = []) {
   for (const file of files) {
     const raw = fs.readFileSync(file, "utf8");
 
-    const optimized = svgo.optimize(raw).data;
+    // No usar SVGO por ahora - está causando problemas con stroke-width
+    const optimized = raw;
 
     const name = path.basename(file, ".svg")
       .replace(/(^\w|-\w)/g, c => c.replace("-", "").toUpperCase());
 
     const jsx = await svgr(optimized, {
       jsxRuntime: "automatic",
-      expandProps: "start"
+      expandProps: "start",
+      svgo: false  // Desactivar SVGO en SVGR - ya está optimizado
     }, { componentName: name });
 
     const rel = path.relative(ICONS, file);
@@ -41,11 +43,56 @@ function walk(dir, arr = []) {
 
     const outPath = path.join(outDir, `${name}.tsx`);
 
+    // Limpiar el JSX generado y agregar props correctamente
+    let cleanJsx = jsx
+      // Remover atributos width/height hardcoded del SVG principal solamente (no stroke-width, etc)
+      .replace(/(<svg[^>]*)\swidth="[^"]*"/g, '$1')
+      .replace(/(<svg[^>]*)\sheight="[^"]*"/g, '$1')
+      // Convertir atributos SVG de kebab-case a camelCase para React
+      .replace(/stroke-width=/g, 'strokeWidth=')
+      .replace(/stroke-linecap=/g, 'strokeLinecap=')
+      .replace(/stroke-linejoin=/g, 'strokeLinejoin=')
+      .replace(/stroke-miterlimit=/g, 'strokeMiterlimit=')
+      .replace(/stroke-dasharray=/g, 'strokeDasharray=')
+      .replace(/stroke-dashoffset=/g, 'strokeDashoffset=')
+      .replace(/fill-rule=/g, 'fillRule=')
+      .replace(/fill-opacity=/g, 'fillOpacity=')
+      .replace(/stroke-opacity=/g, 'strokeOpacity=')
+      .replace(/clip-path=/g, 'clipPath=')
+      .replace(/clip-rule=/g, 'clipRule=')
+      // Normalizar espacios
+      .replace(/\s+/g, ' ')
+      .replace(/<svg\s+/, '<svg ');
+
+    // Detectar si el SVG usa stroke en lugar de fill
+    const usesStroke = optimized.includes('stroke=') && optimized.includes('fill="none"');
+
+    // Detectar si el SVG ya tiene fill="currentColor" en elementos internos
+    const hasInternalFill = optimized.includes('fill="currentColor"');
+
+    // Detectar si tiene múltiples elementos sin fill (probablemente necesita stroke)
+    const hasUnfilledElements = (optimized.match(/<(circle|rect|path|polygon)/g) || []).length > 1 &&
+                                 !optimized.includes('fill=');
+
+    // Construir atributos del SVG principal
+    let svgAttrs = 'width={size} height={size}';
+
+    if (usesStroke || hasUnfilledElements) {
+      // Iconos que usan stroke o tienen elementos sin fill
+      svgAttrs += ' stroke={color} fill="none"';
+    } else if (!hasInternalFill) {
+      // Iconos que usan fill en el SVG principal
+      svgAttrs += ' fill={color}';
+    }
+    // Si tiene fill interno, no agregar fill al SVG principal
+
+    svgAttrs += ' className={className} style={style} {...props}';
+
     fs.writeFileSync(outPath, `
 import React from "react";
 
 export const ${name} = ({ size = 24, color = "currentColor", className = "", style = {}, ...props }) => (
-  ${jsx.replace(/<svg/, `<svg width={size} height={size} fill={color} className={className} style={style} {...props}`)}
+  ${cleanJsx.replace(/<svg/, `<svg ${svgAttrs}`)}
 );
 
 export default ${name};
