@@ -48,6 +48,9 @@ function walk(dir, arr = []) {
       // Remover atributos width/height hardcoded del SVG principal solamente (no stroke-width, etc)
       .replace(/(<svg[^>]*)\swidth="[^"]*"/g, '$1')
       .replace(/(<svg[^>]*)\sheight="[^"]*"/g, '$1')
+      // Remover atributos de color del SVG principal para que sean controlados por props
+      .replace(/(<svg[^>]*)\sfill="[^"]*"/g, '$1')
+      .replace(/(<svg[^>]*)\sstroke="[^"]*"/g, '$1')
       // Convertir atributos SVG de kebab-case a camelCase para React
       .replace(/stroke-width=/g, 'strokeWidth=')
       .replace(/stroke-linecap=/g, 'strokeLinecap=')
@@ -76,6 +79,7 @@ function walk(dir, arr = []) {
 
     // Construir atributos del SVG principal
     let svgAttrs = 'width={size} height={size}';
+    let styleAttr = 'style={style}';
 
     if (usesStroke || hasUnfilledElements) {
       // Iconos que usan stroke o tienen elementos sin fill
@@ -83,10 +87,12 @@ function walk(dir, arr = []) {
     } else if (!hasInternalFill) {
       // Iconos que usan fill en el SVG principal
       svgAttrs += ' fill={color}';
+    } else {
+      // Si tiene fill="currentColor" interno, pasar color via style
+      styleAttr = 'style={{color, ...style}}';
     }
-    // Si tiene fill interno, no agregar fill al SVG principal
 
-    svgAttrs += ' className={className} style={style} {...props}';
+    svgAttrs += ` className={className} ${styleAttr} {...props}`;
 
     fs.writeFileSync(outPath, `
 import React from "react";
